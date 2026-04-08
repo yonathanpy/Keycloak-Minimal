@@ -1,7 +1,3 @@
-Got it — here it is **clean, outside markdown block**, ready to paste directly into your `README.md` without wrapping issues.
-
----
-
 # keycloak-minimal
 
 minimal hardened deployment profile for keycloak in controlled environments
@@ -13,9 +9,9 @@ focused on:
 * strict authentication flows
 * controlled exposure
 
-no unnecessary extensions
-no default insecure settings
-no interactive misconfiguration
+no unnecessary extensions  
+no default insecure settings  
+no interactive misconfiguration  
 
 ---
 
@@ -33,105 +29,105 @@ removes default exposure patterns and enforces strict runtime behavior.
 
 ## structure
 
-keycloak-minimal/
+    keycloak-minimal/
 
-├── conf/
-│   ├── keycloak.conf
-│   └── realm-export.json
+    ├── conf/
+    │   ├── keycloak.conf
+    │   └── realm-export.json
 
-├── docker/
-│   └── docker-compose.yml
+    ├── docker/
+    │   └── docker-compose.yml
 
-├── scripts/
-│   └── bootstrap.sh
+    ├── scripts/
+    │   └── bootstrap.sh
 
-└── README.md
+    └── README.md
 
 ---
 
 ## hardened configuration
 
-conf/keycloak.conf
+`conf/keycloak.conf`
 
-hostname=auth.internal
-http-enabled=false
-https-port=8443
+    hostname=auth.internal
+    http-enabled=false
+    https-port=8443
 
-proxy=edge
+    proxy=edge
 
-hostname-strict=true
-hostname-strict-https=true
+    hostname-strict=true
+    hostname-strict-https=true
 
-log-level=INFO
+    log-level=INFO
 
-spi-login-protocol-openid-connect-legacy-logout-redirect-uri=false
-spi-theme-cache-themes=true
-spi-theme-cache-templates=true
+    spi-login-protocol-openid-connect-legacy-logout-redirect-uri=false
+    spi-theme-cache-themes=true
+    spi-theme-cache-templates=true
 
-features=token-exchange,admin-fine-grained-authz
+    features=token-exchange,admin-fine-grained-authz
 
-health-enabled=true
-metrics-enabled=false
+    health-enabled=true
+    metrics-enabled=false
 
 ---
 
 ## container deployment
 
-docker/docker-compose.yml
+`docker/docker-compose.yml`
 
-version: "3.9"
+    version: "3.9"
 
-services:
-keycloak:
-image: quay.io/keycloak/keycloak:latest
-command: start --optimized
-environment:
-KEYCLOAK_ADMIN: admin
-KEYCLOAK_ADMIN_PASSWORD: strongpassword
-ports:
-- "8443:8443"
-volumes:
-- ./conf:/opt/keycloak/conf
-restart: unless-stopped
+    services:
+      keycloak:
+        image: quay.io/keycloak/keycloak:latest
+        command: start --optimized
+        environment:
+          KEYCLOAK_ADMIN: admin
+          KEYCLOAK_ADMIN_PASSWORD: strongpassword
+        ports:
+          - "8443:8443"
+        volumes:
+          - ./conf:/opt/keycloak/conf
+        restart: unless-stopped
 
 ---
 
 ## bootstrap
 
-scripts/bootstrap.sh
+`scripts/bootstrap.sh`
 
-#!/bin/bash
-set -e
+    #!/bin/bash
+    set -e
 
-echo "[*] starting keycloak-minimal"
-docker compose up -d
+    echo "[*] starting keycloak-minimal"
+    docker compose up -d
 
-echo "[*] waiting for service..."
-sleep 10
+    echo "[*] waiting for service..."
+    sleep 10
 
-echo "[+] ready"
+    echo "[+] ready"
 
 ---
 
 ## realm baseline
 
-conf/realm-export.json
+`conf/realm-export.json`
 
-{
-"realm": "internal",
-"enabled": true,
-"loginWithEmailAllowed": false,
-"duplicateEmailsAllowed": false,
-"resetPasswordAllowed": false,
-"editUsernameAllowed": false,
-"bruteForceProtected": true,
-"permanentLockout": false,
-"maxFailureWaitSeconds": 900,
-"minimumQuickLoginWaitSeconds": 60,
-"waitIncrementSeconds": 60,
-"quickLoginCheckMilliSeconds": 1000,
-"maxDeltaTimeSeconds": 43200
-}
+    {
+      "realm": "internal",
+      "enabled": true,
+      "loginWithEmailAllowed": false,
+      "duplicateEmailsAllowed": false,
+      "resetPasswordAllowed": false,
+      "editUsernameAllowed": false,
+      "bruteForceProtected": true,
+      "permanentLockout": false,
+      "maxFailureWaitSeconds": 900,
+      "minimumQuickLoginWaitSeconds": 60,
+      "waitIncrementSeconds": 60,
+      "quickLoginCheckMilliSeconds": 1000,
+      "maxDeltaTimeSeconds": 43200
+    }
 
 ---
 
@@ -149,11 +145,11 @@ conf/realm-export.json
 
 ## execution
 
-bash scripts/bootstrap.sh
+    bash scripts/bootstrap.sh
 
 access endpoint:
 
-[https://auth.internal:8443](https://auth.internal:8443)
+https://auth.internal:8443
 
 ---
 
@@ -197,6 +193,6 @@ keycloak-minimal enforces a controlled identity surface:
 
 define → restrict → authenticate → validate
 
-no excess exposure
-no implicit trust
+no excess exposure  
+no implicit trust  
 no uncontrolled expansion
